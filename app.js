@@ -5,7 +5,7 @@ const mssql = require('mssql'); // Import mssql for SQL Server connection
 require('dotenv').config(); // Load environment variables
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // Middleware for parsing URL-encoded data
-const port = 3000;
+const port = 4000;
 
 // Connect to the database
 const dbConfig = process.env.DB_CONNECTION_STRING;
@@ -17,7 +17,7 @@ app.post('/login', async (req, res) => {
     try {
         const pool = await mssql.connect(dbConfig);
         const result = await pool.request()
-            .input('username', mssql.VarChar, username)
+            .input('username', mssql.VarChar, username)            
             .input('password', mssql.VarChar, password)
             .query('SELECT * FROM Users WHERE username = @Username AND password = @Password');
 
@@ -38,7 +38,7 @@ app.post('/login', async (req, res) => {
 
 // Serve the login page
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'pages', 'login.html'));
+    res.sendFile(path.join(__dirname, 'views', 'pages', 'index.html'));
 });
 
 // Start the server
