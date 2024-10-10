@@ -26,11 +26,13 @@ exports.renderLoginPage = (req, res) => {
 // Render the index page with username and meals
 exports.renderIndexPage = async (req, res) => {
     const username = req.query.username || null;
-
     if (username) {
         try {
             // Fetch the meals for the logged-in user
             const meals = await userModel.findMealsByUsernameAndPassword(username);
+            
+            // Log the meals to see if any data is being fetched
+            console.log('Meals fetched for user:', username, meals);
             
             // Render the index page with meals
             res.render('pages/index', { username, meals });
@@ -44,4 +46,16 @@ exports.renderIndexPage = async (req, res) => {
         res.render('pages/index', { username: null, meals: [] });
     }
 };
+
+exports.filterMealsByDate = async (req, res) => {
+    const { fromDate, toDate } = req.query; // Capture the dates sent from the front-end
+    const username=req.query.username;
+    try {
+        const filteredMeals = await userModel.getMealsByDateRange(fromDate, toDate);
+        res.render('pages/index', { username,meals: filteredMeals });
+    } catch (error) {
+        res.status(500).send('Error filtering meals by date');
+    }
+};
+
 
