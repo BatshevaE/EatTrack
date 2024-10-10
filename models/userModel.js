@@ -17,4 +17,19 @@ async function findUserByUsernameAndPassword(username, password) {
     }
 }
 
-module.exports = { findUserByUsernameAndPassword };
+async function findMealsByUsernameAndPassword(username, password) {
+    try {
+        const pool = await mssql.connect(dbConfig);
+        const result = await pool.request()
+            .input('username', mssql.VarChar, username)
+            .input('password', mssql.VarChar, password)
+            .query('SELECT * FROM UserMeals WHERE UserName = @username AND Password = @password');
+        await pool.close();
+        return result.recordset;
+    } catch (err) {
+        console.error('Database query failed', err);
+        throw err;
+    }
+}
+
+module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword };

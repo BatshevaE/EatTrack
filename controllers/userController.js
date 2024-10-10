@@ -23,8 +23,25 @@ exports.renderLoginPage = (req, res) => {
     res.render('pages/login');
 };
 
-// Render the index page with username
-exports.renderIndexPage = (req, res) => {
+// Render the index page with username and meals
+exports.renderIndexPage = async (req, res) => {
     const username = req.query.username || null;
-    res.render('pages/index', { username });
+
+    if (username) {
+        try {
+            // Fetch the meals for the logged-in user
+            const meals = await userModel.findMealsByUsernameAndPassword(username);
+            
+            // Render the index page with meals
+            res.render('pages/index', { username, meals });
+
+        } catch (error) {
+            console.error('Error fetching meals:', error);
+            res.status(500).send('Server error while fetching meals.');
+        }
+    } else {
+        // If no username is provided, just render the page with an empty meals array
+        res.render('pages/index', { username: null, meals: [] });
+    }
 };
+

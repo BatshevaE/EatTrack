@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment variables
+.env
+
+# SQL Server specific files
+*.mdf
+*.ldf
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# VS Code specific settings
+.vscode/
+
+# Package lock
+package-lock.json
+
+# Coverage directories
+coverage/
+
+# EJS cache
+*.ejs~
+
+# Public built files (optional, if you're generating files)
+public/build/
+public/dist/
