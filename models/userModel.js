@@ -22,7 +22,6 @@ async function findMealsByUsernameAndPassword(username) {
         const pool = await mssql.connect(dbConfig);
         const result = await pool.request()
             .input('username', mssql.VarChar, username)
-            //.input('password', mssql.VarChar, password)
             .query('SELECT * FROM UserMeals WHERE UserName = @username');
         await pool.close();
         return result.recordset;
@@ -34,22 +33,29 @@ async function findMealsByUsernameAndPassword(username) {
 
 // Function to get meals within a specific date range
 
-async function getMealsByDateRange(fromDate, toDate) {
+async function getMealsByDateRange(username,fromDate, toDate) {
     try {
-        const pool = await mssql.connect(process.env.DB_CONNECTION_STRING); // Connect to the DB
+        const pool = await mssql.connect(dbConfig); // Connect to the DB
         const result = await pool.request()
+            .input('username', mssql.VarChar, username)
             .input('fromDate', mssql.Date, fromDate) // Bind the fromDate as a SQL Date type
             .input('toDate', mssql.Date, toDate)     // Bind the toDate as a SQL Date type
             .query(`
                 SELECT * FROM UserMeals
-                WHERE Date >= @fromDate AND Date <= @toDate
+                WHERE 
+                Date >= @fromDate 
+                AND Date <= @toDate
+                AND UserName= @username
                 ORDER BY Date ASC
             `);
+            
         return result.recordset; // Return the filtered meal records
     } catch (err) {
-        console.error('Error querying meals by date range:', err);
-        throw err;
+        console.error('Error querying meals by date range:', err.message); // Log the error message
+        console.error('Stack trace:', err.stack); // Log the stack trace
+        throw err; // Rethrow the error for further handling
     }
 }
+
 
 module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword,getMealsByDateRange };

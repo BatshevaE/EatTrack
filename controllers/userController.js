@@ -51,7 +51,7 @@ exports.filterMealsByDate = async (req, res) => {
     const { fromDate, toDate } = req.query; // Capture the dates sent from the front-end
     const username=req.query.username;
     try {
-        const filteredMeals = await userModel.getMealsByDateRange(fromDate, toDate);
+        const filteredMeals = await userModel.getMealsByDateRange(username,fromDate, toDate);
         res.render('pages/index', { username,meals: filteredMeals });
     } catch (error) {
         res.status(500).send('Error filtering meals by date');

@@ -3,7 +3,8 @@
 }
 
 body {
-    background-color: #f0f2f5; /* Soft light background */
+    background: url('https://t3.ftcdn.net/jpg/02/48/92/96/240_F_248929619_JkVBYroM1rSrshWJemrcjriggudHMUhV.jpg') no-repeat center center fixed; /* Nutritional food image */
+    background-size: cover; /* Cover the whole page */
     font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
@@ -13,65 +14,76 @@ body {
 }
 
 .login-container {
-    background-color: #ffffff;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    width: 350px;
+    background-color: rgba(255, 255, 255, 0.9); /* White with transparency */
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    width: 400px;
     text-align: center;
+    backdrop-filter: blur(10px); /* Blurring the background */
+    transition: transform 0.3s;
+}
+
+.login-container:hover {
+    transform: translateY(-10px); /* Slight lift on hover */
 }
 
 .login-form h1 {
     margin-bottom: 1.5rem;
-    color: #333;
+    color: #2e7d32; /* Darker green for title */
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .input-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .input-group input {
     width: 100%;
     padding: 15px;
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 1rem;
     transition: border 0.3s;
 }
 
 .input-group input:focus {
-    border-color: #007bff;
+    border-color: #4caf50; /* Green border on focus */
     outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Shadow for focus */
 }
 
 button {
     width: 100%;
     padding: 15px;
     border: none;
-    border-radius: 5px;
-    background-color: #007bff; /* Bootstrap primary color */
+    border-radius: 10px;
+    background-color: #4caf50; /* Green color */
     color: white;
     font-size: 1rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, transform 0.3s;
 }
 
 button:hover {
-    background-color: #0056b3; /* Darker shade for hover effect */
+    background-color: #388e3c; /* Darker green for hover effect */
+    transform: scale(1.05); /* Slightly enlarge button on hover */
 }
 
 .signup-link {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
+    color: #555;
 }
 
 .signup-link a {
-    color: #007bff;
+    color: #4caf50; /* Green link */
     text-decoration: none;
     transition: color 0.3s;
 }
 
 .signup-link a:hover {
-    color: #0056b3;
+    color: #388e3c; /* Darker green on hover */
 }
-

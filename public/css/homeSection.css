@@ -1,0 +1,56 @@
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* The color of the text */
+    text-align: center;
+}
+
+.hero-section .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Black with some transparency */
+    z-index: 0; /* Ensure the background is behind other content */
+    animation: changeBackground 20s infinite; /* Add animation to the background */
+}
+
+@keyframes changeBackground {
+    0% { background-image: url('https://domf5oio6qrcr.cloudfront.net/medialibrary/13503/bigstock-Health-food-selection-super-foods-fruits-veggies.jpg'); }
+    33% { background-image: url('https://st2.depositphotos.com/1063437/6215/i/380/depositphotos_62155999-stock-photo-wicker-basket-with-assorted-raw.jpg'); }
+    66% { background-image: url('https://images.squarespace-cdn.com/content/v1/59f0e6beace8641044d76e9c/1572359931877-CE6Q9BP8DCXEWCV18FIY/Nutrition+Basics.jpeg'); }
+    100% { background-image: url('https://domf5oio6qrcr.cloudfront.net/medialibrary/13503/bigstock-Health-food-selection-super-foods-fruits-veggies.jpg'); }
+}
+
+.hero-section .hero-content {
+    z-index: 1;
+    position: relative;
+    max-width: 800px;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    text-shadow: 
+        -1px -1px 0 black,  
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black; /* Creates a black outline effect */
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    text-shadow: 
+        -1px -1px 0 black,  
+        1px -1px 0 black,
+        -1px 1px 0 black,
+        1px 1px 0 black; /* Creates a black outline effect */
+}
