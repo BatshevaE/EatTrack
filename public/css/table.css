@@ -97,3 +97,9 @@ tbody tr:hover {
         transform: translateY(0);
     }
 }
+/* CSS for the placeholder text in the new meal entry row */
+/* Targeting the placeholder text in all input fields */
+input::placeholder {
+    font-size: 0.8rem; /* Adjust the size as needed */
+    color: #adb5bd; /* Optional: change placeholder color */
+}

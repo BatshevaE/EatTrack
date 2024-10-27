@@ -1,8 +1,13 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
+
 const app = express();
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 require('dotenv').config(); // Load environment variables
+
+app.use(fileUpload());
+
 
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
@@ -19,3 +24,4 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+

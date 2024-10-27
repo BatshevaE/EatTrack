@@ -81,7 +81,7 @@
                             <div class="hero-section-text">
                                 <small class="section-small-title">Welcome to Eat Track <i class="hero-icon bi-house"></i></small>
                                 <h1 class="hero-title text-black mt-2 mb-4">Your Meal Tracking Dashboard</h1>
-                            
+                                
                                 <% if (meals.length > 0) { %>
                                 <h2 class="text-black">Your Meals</h2>
                                 <form action="/filter" method="GET" class="d-flex justify-content-center align-items-center my-4">
@@ -127,17 +127,44 @@
                                                     </td>
                                                 </tr>
                                             <% }); %>
+            
+                                            <!-- New meal entry row -->
+                                            <tr>
+                                                <form action="/add-meal" method="POST" enctype="multipart/form-data">
+                                                    <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
+                                                    <td><input type="time" name="Time" class="form-control" required></td>
+                                                    <td><input type="date" name="Date" class="form-control" required></td>
+                                                    <td>
+                                                        <input type="file" name="DescriptionImage" class="form-control" accept="image/*" required>
+                                                    </td>
+                                                    <td><input type="number" name="Gram" class="form-control" placeholder="Gram" required></td>
+                                                    <td><input type="number" name="GlucoseLevelAfterTwoHours" class="form-control" placeholder="Glucose Level" required></td>
+                                                    <td>
+                                                        <!--<select name="Holiday" class="form-control" required>-->
+                                                            <input type="hidden" name="Holiday" value="true">
+                                                        <!--</select>-->
+                                                    </td>
+                                                    <td>
+                                                        <button type="submit" class="btn btn-success">Add Meal</button>
+                                                    </td>
+                                                </form>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <% } else { %>
                                     <p class="text-black">No meals found.</p>
+                                    <form action="/index?username=${username}" method="GET" class="d-flex justify-content-center mt-3">
+                                        <input type="hidden" name="username" value="<%= username %>">
+                                        <button type="submit" class="btn btn-secondary">Back to Dashboard</button>
+                                    </form>
                                 <% } %>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+            
             
                         
             <!-- Graph Section -->

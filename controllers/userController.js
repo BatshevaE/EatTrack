@@ -32,7 +32,7 @@ exports.renderIndexPage = async (req, res) => {
             const meals = await userModel.findMealsByUsernameAndPassword(username);
             
             // Log the meals to see if any data is being fetched
-            console.log('Meals fetched for user:', username, meals);
+            //console.log('Meals fetched for user:', username, meals);
             
             // Render the index page with meals
             res.render('pages/index', { username, meals });
