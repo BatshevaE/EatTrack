@@ -1,10 +1,16 @@
 const mssql = require('mssql');
 require('dotenv').config();
 const axios = require('axios');
+const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const apiKey = process.env.ApiKeyImagga;
 const apiSecret = process.env.APISecretImagga;
-
+// Cloudinary configuration
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY_CLOUDINARY,
+    api_secret: process.env.API_SECRET_CLOUDINARY
+});
 const dbConfig = process.env.DB_CONNECTION_STRING;
 
 async function addMealToDB(username, mealData) {
@@ -56,9 +62,40 @@ async function addMealToDB(username, mealData) {
     }
 }
 
+async function uploadImageToCloudinary(imagePath) {
+    try {
+        const result = await cloudinary.uploader.upload(imagePath);
+        return result.secure_url;
+    } catch (error) {
+        console.error("Failed to upload image to Cloudinary:", error.message);
+        throw error;
+    }
+}
 
+async function getHighestConfidenceTag(imageUrl) {
+    try {
+        const response = await axios.get('https://api.imagga.com/v2/tags', {
+            params: { image_url: imageUrl },
+            auth: {
+                username: process.env.ApiKeyImagga,
+                password: process.env.APISecretImagga,
+            }
+        });
+        const tags = response.data.result.tags;
+        if (tags.length > 0) {
+            const highestConfidenceTag = tags.reduce((highest, tag) => 
+                tag.confidence > highest.confidence ? tag : highest, tags[0]
+            );
+            return highestConfidenceTag.tag.en; // Return in English
+        }
+        return "Unknown food type"; // אם אין תיוגים, מוחזר ערך ברירת מחדל
+    } catch (error) {
+        console.error('Error tagging the image with Imagga:', error.response?.data || error.message);
+        throw error;
+    }
+}
 
-async function getHighestConfidenceTag(imagePath) {
+/*async function getHighestConfidenceTag(imagePath) {
     try {
         // Read the image file
         const imageFile = fs.createReadStream(imagePath);
@@ -91,9 +128,9 @@ async function getHighestConfidenceTag(imagePath) {
         console.error('Error tagging the image:', error.response?.data || error.message);
         throw error; // Rethrow the error for further handling
     }
-}
+}*/
 
 // Usage Example
 // getHighestConfidenceTag('path_to_your_image.jpg').then(console.log).catch(console.error);
 
-module.exports = { addMealToDB,getHighestConfidenceTag };
+module.exports = { addMealToDB, uploadImageToCloudinary, getHighestConfidenceTag };

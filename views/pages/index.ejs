@@ -96,63 +96,63 @@
                                 </form>
                                 
                                 <!-- Redesigned Table -->
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover table-light">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th scope="col">Meal Type</th>
-                                                <th scope="col">Time</th>
-                                                <th scope="col">Date</th>
-                                                <th scope="col">Description</th>
-                                                <th scope="col">Gram</th>
-                                                <th scope="col">Glucose Level (After 2 Hours)</th>
-                                                <th scope="col">Holiday</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <% meals.forEach(function(meal) { %>
-                                                <tr>
-                                                    <td><%= meal.MealType %></td>
-                                                    <td><%= new Date(meal.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></td>
-                                                    <td><%= new Date(meal.Date).toLocaleDateString('en-GB') %></td> <!-- Format as DD/MM/YYYY -->
-                                                    <td><%= meal.Description %></td>
-                                                    <td><%= meal.Gram %></td>
-                                                    <td><%= meal.GlucoseLevelAfterTwoHours %></td>
-                                                    <td>
-                                                        <% if (meal.Holiday) { %>
-                                                            <span style="color:green;">✓</span> <!-- Holiday is true -->
-                                                        <% } else { %>
-                                                            <span style="color:red;">✗</span> <!-- Holiday is false -->
-                                                        <% } %>
-                                                    </td>
-                                                </tr>
-                                            <% }); %>
-            
-                                            <!-- New meal entry row -->
-                                            <tr>
-                                                <form action="/add-meal" method="POST">
-                                                    <input type="hidden" class="form-control" name="username" value="<%= username %>">
-                                                    <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
-                                                    <td><input type="time" name="Time" class="form-control" required></td>
-                                                    <td><input type="date" name="Date" class="form-control" required></td>
-                                                    <td>
-                                                        <input type="file" name="DescriptionImage" class="form-control" accept="image/*" required>
-                                                    </td>
-                                                    <td><input type="number" name="Gram" class="form-control" placeholder="Gram" required></td>
-                                                    <td><input type="number" name="GlucoseLevelAfterTwoHours" class="form-control" placeholder="Glucose Level" required></td>
-                                                    <td>
-                                                        <!--<select name="Holiday" class="form-control" required>-->
-                                                            <input type="hidden" name="Holiday" value="true">
-                                                        <!--</select>-->
-                                                    </td>
-                                                    <td>
-                                                        <button type="submit" class="btn btn-success">Add Meal</button>
-                                                    </td>
-                                                </form>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                               <!-- Redesigned Table with Scroll -->
+<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+    <table class="table table-bordered table-hover table-light">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">Meal Type</th>
+                <th scope="col">Time</th>
+                <th scope="col">Date</th>
+                <th scope="col">Description</th>
+                <th scope="col">Gram</th>
+                <th scope="col">Glucose Level (After 2 Hours)</th>
+                <th scope="col">Holiday</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% meals.forEach(function(meal) { %>
+                <tr>
+                    <td><%= meal.MealType %></td>
+                    <td><%= new Date(meal.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></td>
+                    <td><%= new Date(meal.Date).toLocaleDateString('en-GB') %></td> <!-- Format as DD/MM/YYYY -->
+                    <td><%= meal.Description %></td>
+                    <td><%= meal.Gram %></td>
+                    <td><%= meal.GlucoseLevelAfterTwoHours %></td>
+                    <td>
+                        <% if (meal.Holiday) { %>
+                            <span style="color:green;">✓</span> <!-- Holiday is true -->
+                        <% } else { %>
+                            <span style="color:red;">✗</span> <!-- Holiday is false -->
+                        <% } %>
+                    </td>
+                </tr>
+            <% }); %>
+
+            <!-- New meal entry row -->
+            <tr>
+                <form action="/add-meal" method="POST" enctype="multipart/form-data" >
+                    <input type="hidden" class="form-control" name="username" value="<%= username %>">
+                    <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
+                    <td><input type="time" name="Time" class="form-control" required></td>
+                    <td><input type="date" name="Date" class="form-control" required></td>
+                    <td>
+                        <input type="file" name="DescriptionImage" class="form-control" accept="image/*" required>
+                    </td>
+                    <td><input type="number" name="Gram" class="form-control" placeholder="Gram" required></td>
+                    <td><input type="number" name="GlucoseLevelAfterTwoHours" class="form-control" placeholder="Glucose Level" required></td>
+                    <td>
+                        <input type="hidden" name="Holiday" value="true">
+                    </td>
+                    <td>
+                        <button type="submit" class="btn btn-success">Add Meal</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
                                 <% } else { %>
                                     <p class="text-black">No meals found.</p>
                                     <form action="/index?username=${username}" method="GET" class="d-flex justify-content-center mt-3">
