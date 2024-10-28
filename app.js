@@ -1,12 +1,10 @@
 const express = require('express');
-const fileUpload = require('express-fileupload');
 
 const app = express();
 const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 require('dotenv').config(); // Load environment variables
 
-app.use(fileUpload());
 
 
 app.use(express.static('public'));

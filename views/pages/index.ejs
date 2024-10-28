@@ -131,6 +131,7 @@
                                             <!-- New meal entry row -->
                                             <tr>
                                                 <form action="/add-meal" method="POST" enctype="multipart/form-data">
+                                                    <input type="hidden" class="form-control" name="username" value="<%= username %>">
                                                     <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
                                                     <td><input type="time" name="Time" class="form-control" required></td>
                                                     <td><input type="date" name="Date" class="form-control" required></td>

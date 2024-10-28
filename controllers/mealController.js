@@ -1,39 +1,29 @@
+// controllers/mealController.js
 const imaggaModel = require('../models/imaggaModel');
+async function addMeal(req, res) {
+  //  const { username, password } = req.body;
+  const username = req.body.username || req.query.username;
 
-exports.addMeal = async (req, res) => {
-    const { mealType, time, gram, glucoseLevelAfterTwoHours } = req.body;
-    const imageFile = req.files ? req.files.DescriptionImage : null; // Check if files are present
-
-    if (!imageFile) {
-        console.error('No image data provided in the request.');
-        return res.status(400).send('No image data provided.');
-    }
-
-    console.log('Uploaded Image File:', imageFile); // Log the image file details
-    console.log('Image Data:', imageFile.data); // Log the image data
+    console.log(username)
+    const mealData = {
+        MealType: req.body.MealType,
+        Time: req.body.Time,
+        Date: req.body.Date,
+        Gram: req.body.Gram,
+        GlucoseLevelAfterTwoHours: req.body.GlucoseLevelAfterTwoHours,
+        Holiday: req.body.Holiday,
+    };
+    /*const username = req.body.username;*/
 
     try {
-        // Convert the image file to base64 for Imagga API
-        const imageDataUrl = imageFile.data.toString('base64'); // Convert to base64
-        console.log('Base64 Image Data Length:', imageDataUrl.length); // Log the length
-
-        // Get the highest-confidence tag from Imagga
-        const description = await imaggaModel.getHighestConfidenceTag(imageDataUrl);
-
-        // Prepare the new meal object
-        const newMeal = { mealType, time, gram, glucoseLevel: glucoseLevelAfterTwoHours, description };
-
-        // Save the new meal to the database
-        await imaggaModel.addMealToDatabase(newMeal);
-
-        // Retrieve the updated list of meals
-        const username = req.body.username; // Assuming you have the username in the request
-        const meals = await userModel.getAllMeals(username);
-
-        // Render the index page with the updated meals
-        res.render('pages/index', { username, meals, successMessage: 'Meal added successfully!' });
+        await imaggaModel.addMealToDB(username, mealData);
+        /*res.redirect('/index'); // Redirect after successful addition*/
+            // Redirect to the index page with username
+            res.redirect(`/index?username=${username}`);
     } catch (error) {
-        console.error('Error adding meal:', error);
+        console.error(error.message);
         res.status(500).send('Error adding meal');
     }
-};
+}
+
+module.exports = { addMeal };

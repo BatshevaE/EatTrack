@@ -1,62 +1,30 @@
-const axios = require('axios');
-const sql = require('mssql'); // Import mssql for database interaction
-
+// models/mealModel.js
+const mssql = require('mssql');
 require('dotenv').config();
 
-const apiKey = process.env.ApiKeyImagga;
-const apiSecret = process.env.APISecretImagga;
+const dbConfig = process.env.DB_CONNECTION_STRING;
 
-async function getHighestConfidenceTag(imageDataUrl) {
+async function addMealToDB(username, mealData) {
     try {
-        const response = await axios.post('https://api.imagga.com/v2/tags', {
-            image_base64: imageDataUrl.split(',')[1] // Extract base64 part from the data URL
-        }, {
-            auth: { username: apiKey, password: apiSecret },
-        });
-
-        const tags = response.data.result.tags;
-        if (tags.length > 0) {
-            return tags.reduce((highest, tag) =>
-                tag.confidence > highest.confidence ? tag : highest, tags[0]
-            ).tag.en;
-        }
-        return null;
-    } catch (error) {
-        console.error('Error tagging the image:', error.response?.data || error.message);
-        throw error;
-    }
-}
-
-
-
-
-// Function to insert a new meal into the database
-async function addMealToDatabase(newMeal) {
-    try {
-        // Configure the database connection
-        const pool = await sql.connect(process.env.DB_CONNECTION_STRING);
-        const { mealType, time, gram, glucoseLevel, description } = newMeal;
-
-        // SQL query to insert the new meal
-        const query = `
-            INSERT INTO Meals (MealType, Time, Gram, GlucoseLevel, Description)
-            VALUES (@mealType, @time, @gram, @glucoseLevel, @description)
-        `;
-
-        // Execute the query
+        const { MealType, Time, Date, Gram, GlucoseLevelAfterTwoHours, Holiday } = mealData;
+        const pool = await mssql.connect(dbConfig);
         await pool.request()
-            .input('mealType', sql.VarChar, mealType)
-            .input('time', sql.Time, time)
-            .input('gram', sql.Int, gram)
-            .input('glucoseLevel', sql.Float, glucoseLevel)
-            .input('description', sql.VarChar, description)
-            .query(query);
-
-        console.log('Meal added to database successfully.');
+            .input('UserName', mssql.VarChar, username)
+            .input('MealType', mssql.VarChar, MealType)
+            .input('Time', mssql.Time, Time)
+            .input('Date', mssql.Date, Date)
+            .input('Gram', mssql.Int, Gram)
+            .input('GlucoseLevelAfterTwoHours', mssql.Int, GlucoseLevelAfterTwoHours)
+            .input('Holiday', mssql.Bit, Holiday === "true" ? 1 : 0)
+            .query(`
+                INSERT INTO UserMeals (UserName, MealType, Time, Date, Gram, GlucoseLevelAfterTwoHours, Holiday)
+                VALUES (@UserName, @MealType, @Time, @Date, @Gram, @GlucoseLevelAfterTwoHours, @Holiday)
+            `);
+        await pool.close();
     } catch (error) {
-        console.error('Error inserting meal into database:', error);
-        throw error; // Rethrow the error for handling in the controller
+        console.error('Failed to add meal:', error);
+        throw new Error('Failed to add meal');
     }
 }
 
-module.exports = { getHighestConfidenceTag,addMealToDatabase };
+module.exports = { addMealToDB };
