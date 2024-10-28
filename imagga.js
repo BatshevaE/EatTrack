@@ -28,5 +28,6 @@ async function tagImage(imageUrl) {
 
 // The image URL you provided
 //const imageUrl = 'https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/658A0A74-039A-487C-A07A-CAAF61B4615D/Derivates/CEB0611B-A236-4CFD-A68E-BE5DE026367F.jpg';
-const imageUrl='https://ynet-pic1.yit.co.il/cdn-cgi/image/f=auto,w=740,q=75/picserver5/crop_images/2019/03/24/9141386/9141386_0_0_1620_1080_x-large.jpg'
+//const imageUrl='https://ynet-pic1.yit.co.il/cdn-cgi/image/f=auto,w=740,q=75/picserver5/crop_images/2019/03/24/9141386/9141386_0_0_1620_1080_x-large.jpg'
+//const imageUrl='https://imgur.com/loMlziC'
 tagImage(imageUrl);
