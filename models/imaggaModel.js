@@ -50,7 +50,7 @@ async function addMealToDB(username, mealData) {
             .input('DescriptionImage', mssql.VarChar, DescriptionImage)
             .input('Gram', mssql.Int, Gram)
             .input('GlucoseLevelAfterTwoHours', mssql.Int, GlucoseLevelAfterTwoHours)
-            .input('Holiday', mssql.Bit, Holiday === "true" ? 1 : 0)
+            .input('Holiday', mssql.Bit, Holiday)
             .query(`
                 INSERT INTO UserMeals (UserName, MealType, Time, Date,Description , Gram, GlucoseLevelAfterTwoHours, Holiday)
                 VALUES (@UserName, @MealType, @Time, @Date,@DescriptionImage, @Gram, @GlucoseLevelAfterTwoHours, @Holiday)
@@ -94,43 +94,33 @@ async function getHighestConfidenceTag(imageUrl) {
         throw error;
     }
 }
+async function isJewishHoliday (date) {
+    const mealDate = new Date(date);
+    const year = mealDate.getFullYear();
+    const month = String(mealDate.getMonth() + 1).padStart(2, '0');
+    const day = String(mealDate.getDate()).padStart(2, '0');
 
-/*async function getHighestConfidenceTag(imagePath) {
     try {
-        // Read the image file
-        const imageFile = fs.createReadStream(imagePath);
+        // Fetch holiday data in JSON format
+        const response = await axios.get(`https://www.hebcal.com/hebcal/?v=1&year=${year}&month=${month}&day=${day}&maj=on&min=on&mod=on&nx=on&mf=on&c=on&cfg=json`);
+        
+        // If items exist, check for yomtov
+        if (response.data && response.data.items) {
+            // Log each item to verify structure
+            response.data.items.forEach(item => console.log("Item:", item));
 
-        // Send the file to Imagga API
-        const response = await axios.post('https://api.imagga.com/v2/tags', 
-            { image: imageFile },
-            {
-                auth: {
-                    username: apiKey,
-                    password: apiSecret,
-                },
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        );
-
-        // Parse and get the tag with the highest confidence
-        const tags = response.data.result.tags;
-        if (tags.length > 0) {
-            const highestConfidenceTag = tags.reduce((highest, tag) => 
-                tag.confidence > highest.confidence ? tag : highest, tags[0]
-            );
-            console.log(highestConfidenceTag.tag.en)
-            return highestConfidenceTag.tag.en; // Return the highest confidence tag in English
+            // Check for yomtov being true
+            const isYomtov = response.data.items.some(item => item.yomtov === true);
+            console.log(isYomtov)
+            // Alternative check: use category as 'holiday' if yomtov is missing
+            return isYomtov || response.data.items.some(item => item.category === 'holiday');
+        } else {
+            console.error('Unexpected data format:', response.data);
+            return false;
         }
-        return null; // Return null if no tags found
     } catch (error) {
-        console.error('Error tagging the image:', error.response?.data || error.message);
-        throw error; // Rethrow the error for further handling
+        console.error('Error fetching holiday data:', error.message);
+        return false;
     }
-}*/
-
-// Usage Example
-// getHighestConfidenceTag('path_to_your_image.jpg').then(console.log).catch(console.error);
-
-module.exports = { addMealToDB, uploadImageToCloudinary, getHighestConfidenceTag };
+}
+module.exports = { addMealToDB, uploadImageToCloudinary, getHighestConfidenceTag,isJewishHoliday };
