@@ -1,6 +1,6 @@
 const mssql = require('mssql');
 require('dotenv').config(); // Load environment variables
-
+//const fs = require('fs');
 const dbConfig = process.env.DB_CONNECTION_STRING;
 
 async function findUserByUsernameAndPassword(username, password) {
@@ -22,7 +22,7 @@ async function findMealsByUsernameAndPassword(username) {
         const pool = await mssql.connect(dbConfig);
         const result = await pool.request()
             .input('username', mssql.VarChar, username)
-            .query('SELECT * FROM UserMeals WHERE UserName = @username');
+            .query('SELECT * FROM UserMeals WHERE UserName = @username ORDER BY Date ASC');
         await pool.close();
         return result.recordset;
     } catch (err) {
@@ -56,6 +56,55 @@ async function getMealsByDateRange(username,fromDate, toDate) {
         throw err; // Rethrow the error for further handling
     }
 }
+async function addMealToDB(username, mealData) {
+    try {
+        const { MealType, Date,DescriptionImage, Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood } = mealData;
+        let { Time } = mealData; // Use `let` to modify the value
+
+        // Validate and format Time
+        if (Time) {
+            const timeParts = Time.split(':');
+            if (timeParts.length === 2) {
+                const hours = parseInt(timeParts[0], 10);
+                const minutes = parseInt(timeParts[1], 10);
+
+                if (!isNaN(hours) && !isNaN(minutes)) {
+                    // Format as "HH:mm:ss"
+                    Time = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:00`;
+                } else {
+                    console.error('Invalid time provided:', Time);
+                    return res.status(400).send('Invalid time format');
+                }
+            } else {
+                console.error('Time format incorrect:', Time);
+                return res.status(400).send('Invalid time format');
+            }
+        } else {
+            console.error("Time is missing or invalid in request:", Time);
+            return res.status(400).send("Time is required");
+        }
+
+        const pool = await mssql.connect(dbConfig);
+        await pool.request()
+            .input('UserName', mssql.VarChar, username)
+            .input('MealType', mssql.VarChar, MealType)
+            .input('Time', mssql.VarChar, Time) 
+            .input('Date', mssql.Date, Date)
+            .input('DescriptionImage', mssql.VarChar, DescriptionImage)
+            .input('Gram', mssql.Int, Gram)
+            .input('GlucoseLevelAfterTwoHours', mssql.Int, GlucoseLevelAfterTwoHours)
+            .input('Holiday', mssql.Bit, Holiday)
+            .input('GlucoseLevelInFood', mssql.Int, GlucoseLevelInFood)
+            .query(`
+                INSERT INTO UserMeals (UserName, MealType, Time, Date,Description , Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood)
+                VALUES (@UserName, @MealType, @Time, @Date,@DescriptionImage, @Gram, @GlucoseLevelAfterTwoHours, @Holiday,@GlucoseLevelInFood)
+            `);
+        await pool.close();
+    } catch (error) {
+        console.error('Failed to add meal:', error);
+        throw new Error('Failed to add meal');
+    }
+}
 
 
-module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword,getMealsByDateRange };
+module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword,getMealsByDateRange,addMealToDB };

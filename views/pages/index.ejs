@@ -48,10 +48,10 @@
                         <a class="nav-link click-scroll" href="#section_3">Glucose Levels</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_4">Update</a>
+                        <a class="nav-link click-scroll" href="#section_4">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link click-scroll" href="#section_5">About</a>
+                        <a class="nav-link click-scroll" href="#section_5">Reviews</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link click-scroll" href="#section_6">Contact</a>
@@ -102,61 +102,65 @@
                                 
                                 <!-- Redesigned Table -->
                                <!-- Redesigned Table with Scroll -->
-<div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-    <table class="table table-bordered table-hover table-light">
-        <thead class="thead-light">
-            <tr>
-                <th scope="col">Meal Type</th>
-                <th scope="col">Time</th>
-                <th scope="col">Date</th>
-                <th scope="col">Description</th>
-                <th scope="col">Gram</th>
-                <th scope="col">Glucose Level (After 2 Hours)</th>
-                <th scope="col">Holiday</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% meals.forEach(function(meal) { %>
-                <tr>
-                    <td><%= meal.MealType %></td>
-                    <td><%= new Date(meal.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></td>
-                    <td><%= new Date(meal.Date).toLocaleDateString('en-GB') %></td> <!-- Format as DD/MM/YYYY -->
-                    <td><%= meal.Description %></td>
-                    <td><%= meal.Gram %></td>
-                    <td><%= meal.GlucoseLevelAfterTwoHours %></td>
-                    <td>
-                        <% if (meal.Holiday) { %>
-                            <span style="color:green;">✓</span> <!-- Holiday is true -->
-                        <% } else { %>
-                            <span style="color:red;">✗</span> <!-- Holiday is false -->
-                        <% } %>
-                    </td>
-                </tr>
-            <% }); %>
-
-            <!-- New meal entry row -->
-            <tr>
-                <form action="/add-meal" method="POST" enctype="multipart/form-data" >
-                    <input type="hidden" class="form-control" name="username" value="<%= username %>">
-                    <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
-                    <td><input type="time" name="Time" class="form-control" required></td>
-                    <td><input type="date" name="Date" class="form-control" required></td>
-                    <td>
-                        <input type="file" name="DescriptionImage" class="form-control" accept="image/*" required>
-                    </td>
-                    <td><input type="number" name="Gram" class="form-control" placeholder="Gram" required></td>
-                    <td><input type="number" name="GlucoseLevelAfterTwoHours" class="form-control" placeholder="Glucose Level" required></td>
-                    <td>
-                        <input type="hidden" name="Holiday" class="form-control">
-                    </td>
-                    <td>
-                        <button type="submit" class="btn btn-success">Add Meal</button>
-                    </td>
-                </form>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                               <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-bordered table-hover table-light">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Meal Type</th>
+                                            <th scope="col">Time</th>
+                                            <th scope="col">Date</th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Gram</th>
+                                            <th scope="col">Glucose Level (After 2 Hours)</th>
+                                            <th scope="col">Calories</th> <!-- New Column Header -->
+                                            <th scope="col">Holiday</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% meals.forEach(function(meal) { %>
+                                            <tr>
+                                                <td><%= meal.MealType %></td>
+                                                <td><%= new Date(meal.Time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %></td>
+                                                <td><%= new Date(meal.Date).toLocaleDateString('en-GB') %></td>
+                                                <td><%= meal.Description %></td>
+                                                <td><%= meal.Gram %></td>
+                                                <td><%= meal.GlucoseLevelAfterTwoHours %></td>
+                                                <td><%= meal.GlucoseLevelInFood || 'N/A' %></td> <!-- Display Glucose Level in Food -->
+                                                <td>
+                                                    <% if (meal.Holiday) { %>
+                                                        <span style="color:green;">✓</span>
+                                                    <% } else { %>
+                                                        <span style="color:red;">✗</span>
+                                                    <% } %>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                            
+                                        <!-- New meal entry row -->
+                                        <tr>
+                                            <form action="/add-meal" method="POST" enctype="multipart/form-data">
+                                                <input type="hidden" class="form-control" name="username" value="<%= username %>">
+                                                <td><input type="text" name="MealType" class="form-control" placeholder="Meal Type" required></td>
+                                                <td><input type="time" name="Time" class="form-control" required></td>
+                                                <td><input type="date" name="Date" class="form-control" required></td>
+                                                <td>
+                                                    <input type="file" name="DescriptionImage" class="form-control" accept="image/*" required>
+                                                </td>
+                                                <td><input type="number" name="Gram" class="form-control" placeholder="Gram" required></td>
+                                                <td><input type="number" name="GlucoseLevelAfterTwoHours" class="form-control" placeholder="Glucose Level" required></td>
+                                                <td><input type="hidden" name="GlucoseLevelInFood" class="form-control" ></td> <!-- New Input for Glucose Level in Food -->
+                                                <td>
+                                                    <input type="hidden" name="Holiday" class="form-control">
+                                                </td>
+                                                <td>
+                                                    <button type="submit" class="btn btn-success">Add Meal</button>
+                                                </td>
+                                            </form>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
 
                                 <% } else { %>
                                     <p class="text-black">No meals found.</p>
@@ -237,7 +241,7 @@
                     }
                 });
             </script>
-            <section class="about-section section-padding" id="section_5">
+            <section class="about-section section-padding" id="section_4">
                 <div class="container">
                     <div class="row align-items-center">
 
@@ -301,212 +305,7 @@
                     </div>
                 </div>
             </section>
-
-
-          <!---  <section class="shop-section section-padding" id="section_3">
-                <div class="container">
-                    <div class="row">
-
-                        <div class="col-lg-12 col-12">
-                            <small class="section-small-title">Moso Design Shop</small>
-
-                            <h2 class="mt-2 mb-4"><span class="tooplate-red">Interior</span> Products</h2>
-                        </div>
-
-                        <div class="col-lg-6 col-12">
-                            <div class="shop-thumb">
-                                <div class="shop-image-wrap">
-                                    <a href="shop-detail.html">
-                                        <img src="images/shop/minimal-bathroom-interior-design-with-wooden-furniture.jpg" class="shop-image img-fluid" alt="">
-                                    </a>
-
-                                    <div class="shop-icons-wrap">
-                                        <div class="shop-icons d-flex flex-column align-items-center">
-                                            <a href="#" class="shop-icon bi-heart"></a>
-
-                                            <a href="#" class="shop-icon bi-bookmark"></a>
-                                        </div>
-
-                                        <p class="shop-pricing mb-0 mt-3">
-                                            <span class="badge custom-badge">$3,600</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="shop-btn-wrap">
-                                        <a href="shop-detail.html" class="shop-btn custom-btn btn d-flex align-items-center align-items-center">Learn more</a>
-                                    </div>
-                                </div>
-
-                                <div class="shop-body">
-                                    <h4>Bathroom</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-6 col-12">
-                            <div class="shop-thumb">
-                                <div class="shop-image-wrap">
-                                    <a href="shop-detail.html">
-                                        <img src="images/shop/mock-up-poster-modern-dining-room-interior-design-with-white-empty-wall.jpg" class="shop-image img-fluid" alt="">
-                                    </a>
-
-                                    <div class="shop-icons-wrap">
-                                        <div class="shop-icons d-flex flex-column align-items-center">
-                                            <a href="#" class="shop-icon bi-heart"></a>
-
-                                            <a href="#" class="shop-icon bi-bookmark"></a>
-                                        </div>
-
-                                        <p class="shop-pricing mb-0 mt-3">
-                                            <span class="badge custom-badge">$6,400</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="shop-btn-wrap">
-                                        <a href="shop-detail.html" class="shop-btn custom-btn btn d-flex align-items-center align-items-center">Learn more</a>
-                                    </div>
-                                </div>
-
-                                <div class="shop-body">
-                                    <h4>Dining</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-12">
-                            <div class="shop-thumb">
-                                <div class="shop-image-wrap">
-                                    <a href="shop-detail.html">
-                                        <img src="images/nutrition.jpg" class="shop-image img-fluid" alt="">
-                                    </a>
-
-                                    <div class="shop-icons-wrap">
-                                        <div class="shop-icons d-flex flex-column align-items-center">
-                                            <a href="#" class="shop-icon bi-heart"></a>
-
-                                            <a href="#" class="shop-icon bi-bookmark"></a>
-                                        </div>
-
-                                        <p class="shop-pricing mb-0 mt-3">
-                                            <span class="badge custom-badge">$2,400</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="shop-btn-wrap">
-                                        <a href="shop-detail.html" class="shop-btn custom-btn btn d-flex align-items-center align-items-center">Learn more</a>
-                                    </div>
-                                </div>
-
-                                <div class="shop-body">
-                                    <h4>Living Room</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-12">
-                            <div class="shop-thumb">
-                                <div class="shop-image-wrap">
-                                    <a href="shop-detail.html">
-                                        <img src="images/shop/concept-home-cooking-with-female-chef.jpg" class="shop-image img-fluid" alt="">
-                                    </a>
-
-                                    <div class="shop-icons-wrap">
-                                        <div class="shop-icons d-flex flex-column align-items-center">
-                                            <a href="#" class="shop-icon bi-heart"></a>
-
-                                            <a href="#" class="shop-icon bi-bookmark"></a>
-                                        </div>
-
-                                        <p class="shop-pricing mb-0 mt-3">
-                                            <span class="badge custom-badge">$3,800</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="shop-btn-wrap">
-                                        <a href="shop-detail.html" class="shop-btn custom-btn btn d-flex align-items-center align-items-center">Learn more</a>
-                                    </div>
-                                </div>
-
-                                <div class="shop-body">
-                                    <h4>Chef Kitchen</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4 col-12">
-                            <div class="shop-thumb">
-                                <div class="shop-image-wrap">
-                                    <a href="shop-detail.html">
-                                        <img src="images/shop/childrens-bed-nursery-cot-velvet-childrens-room.jpg" class="shop-image img-fluid" alt="">
-                                    </a>
-
-                                    <div class="shop-icons-wrap">
-                                        <div class="shop-icons d-flex flex-column align-items-center">
-                                            <a href="#" class="shop-icon bi-heart"></a>
-
-                                            <a href="#" class="shop-icon bi-bookmark"></a>
-                                        </div>
-
-                                        <p class="shop-pricing mb-0 mt-3">
-                                            <span class="badge custom-badge">$850</span>
-                                        </p>
-                                    </div>
-
-                                    <div class="shop-btn-wrap">
-                                        <a href="shop-detail.html" class="shop-btn custom-btn btn d-flex align-items-center align-items-center">Learn more</a>
-                                    </div>
-                                </div>
-
-                                <div class="shop-body">
-                                    <h4>Childrens Bedroom</h4>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-12 col-12">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-
-                                    <li class="page-item active" aria-current="page">
-                                        <a class="page-link" href="#">1</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">2</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">3</a>
-                                    </li>
-
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">4</a>
-                                    </li>
-
-                                    <li class="page-item">
-                                        <a class="page-link" href="#">5</a>
-                                    </li>
-                                    
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-
-                    </div>
-                </div>
-                      </section>-->
-
-
-            <section class="reviews-section section-padding pb-0" id="section_4">
+            <section class="reviews-section section-padding pb-0" id="section_5">
                 <div class="container">
                     <div class="row">
 
