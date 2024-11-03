@@ -34,5 +34,5 @@ async function isJewishHoliday (date) {
         return false;
     }
 }
-isJewishHoliday (30/10/2024)
+//isJewishHoliday (30/10/2024)
 module.exports = { isJewishHoliday };

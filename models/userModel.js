@@ -58,7 +58,7 @@ async function getMealsByDateRange(username,fromDate, toDate) {
 }
 async function addMealToDB(username, mealData) {
     try {
-        const { MealType, Date,DescriptionImage, Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood } = mealData;
+        const { MealType, Date,DescriptionImage, Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood,PredictedGlucoseLevel } = mealData;
         let { Time } = mealData; // Use `let` to modify the value
 
         // Validate and format Time
@@ -95,9 +95,10 @@ async function addMealToDB(username, mealData) {
             .input('GlucoseLevelAfterTwoHours', mssql.Int, GlucoseLevelAfterTwoHours)
             .input('Holiday', mssql.Bit, Holiday)
             .input('GlucoseLevelInFood', mssql.Int, GlucoseLevelInFood)
+            .input('PredictedGlucoseLevel', mssql.Float, PredictedGlucoseLevel)
             .query(`
-                INSERT INTO UserMeals (UserName, MealType, Time, Date,Description , Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood)
-                VALUES (@UserName, @MealType, @Time, @Date,@DescriptionImage, @Gram, @GlucoseLevelAfterTwoHours, @Holiday,@GlucoseLevelInFood)
+                INSERT INTO UserMeals (UserName, MealType, Time, Date,Description , Gram, GlucoseLevelAfterTwoHours, Holiday,GlucoseLevelInFood,PredictedGlucoseLevel)
+                VALUES (@UserName, @MealType, @Time, @Date,@DescriptionImage, @Gram, @GlucoseLevelAfterTwoHours, @Holiday,@GlucoseLevelInFood,@PredictedGlucoseLevel)
             `);
         await pool.close();
     } catch (error) {
@@ -105,6 +106,5 @@ async function addMealToDB(username, mealData) {
         throw new Error('Failed to add meal');
     }
 }
-
 
 module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword,getMealsByDateRange,addMealToDB };
