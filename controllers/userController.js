@@ -30,10 +30,6 @@ exports.renderIndexPage = async (req, res) => {
         try {
             // Fetch the meals for the logged-in user
             const meals = await userModel.findMealsByUsernameAndPassword(username);
-            
-            // Log the meals to see if any data is being fetched
-            //console.log('Meals fetched for user:', username, meals);
-            
             // Render the index page with meals
             res.render('pages/index', { username, meals });
 
@@ -57,4 +53,21 @@ exports.filterMealsByDate = async (req, res) => {
         res.status(500).send('Error filtering meals by date');
     }
 };
+// Render the sign-up page
+exports.renderSignUpPage = (req, res) => {
+    res.render('pages/signup');
+};
 
+// Add a new user to the database
+exports.addUser = async (req, res) => {
+    const { username, password } = req.body;
+    
+    try {
+        // Call the function to add the user in the model
+        await userModel.addUserToDB(username, password);
+        res.redirect('/login'); // Redirect to login after sign-up
+    } catch (error) {
+        console.error('Error signing up user:', error);
+        res.status(500).send('Failed to sign up user');
+    }
+};

@@ -26,7 +26,9 @@ router.get('/login', userController.renderLoginPage);
 router.post('/login', userController.loginUser);
 router.get('/filter', userController.filterMealsByDate);
 router.post('/add-meal',upload.single('DescriptionImage'), mealController.addMeal);
-
+router.get('/signup', userController.renderSignUpPage);
+router.post('/signup', userController.addUser);
+router.post('/predict-glucose', upload.single('DescriptionImage'), mealController.predictGlucoseLevel);
 
 module.exports = router;
 

@@ -23,7 +23,6 @@ async function getGlucoseLevel(foodItem, gramAmount) {
             const calories = food.foodNutrients.find(nutrient => nutrient.nutrientName === 'Energy');
             
             if (calories) {
-                console.log(`The calorie content of ${foodItem} is ${calories.value} ${calories.unitName}.`);
                 return calories.value*gramAmount /100;
             } else {
                 console.log(`Calorie information for ${foodItem} not found.`);
@@ -36,6 +35,5 @@ async function getGlucoseLevel(foodItem, gramAmount) {
     }
     
 }
-//getGlucoseLevel('cheeseburger',100);
 module.exports = { getGlucoseLevel };
 

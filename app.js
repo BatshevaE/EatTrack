@@ -22,7 +22,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 
-
 // Middleware to parse URL-encoded data
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -33,9 +32,6 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Use routes for user-related actions
 app.use('/', userRoutes);
-
-
-// Use `upload.single` middleware in your route
 
   
 

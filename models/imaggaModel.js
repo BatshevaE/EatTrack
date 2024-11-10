@@ -21,7 +21,7 @@ async function getHighestConfidenceTag(imageUrl) {
             );
             return highestConfidenceTag.tag.en; // Return in English
         }
-        return "Unknown food type"; // אם אין תיוגים, מוחזר ערך ברירת מחדל
+        return "Unknown food type"; //return defult value if there is no data
     } catch (error) {
         console.error('Error tagging the image with Imagga:', error.response?.data || error.message);
         throw error;

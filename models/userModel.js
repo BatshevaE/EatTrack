@@ -1,6 +1,5 @@
 const mssql = require('mssql');
 require('dotenv').config(); // Load environment variables
-//const fs = require('fs');
 const dbConfig = process.env.DB_CONNECTION_STRING;
 
 async function findUserByUsernameAndPassword(username, password) {
@@ -32,7 +31,6 @@ async function findMealsByUsernameAndPassword(username) {
 }
 
 // Function to get meals within a specific date range
-
 async function getMealsByDateRange(username,fromDate, toDate) {
     try {
         const pool = await mssql.connect(dbConfig); // Connect to the DB
@@ -106,5 +104,19 @@ async function addMealToDB(username, mealData) {
         throw new Error('Failed to add meal');
     }
 }
+async function addUserToDB(username, password) {
+    try {
+        const pool = await mssql.connect(dbConfig);
+        await pool.request()
+            .input('username', mssql.VarChar, username)
+            .input('password', mssql.VarChar, password)
+            .query(`INSERT INTO Users (username, password) VALUES (@username, @password)`);
+        await pool.close();
+    } catch (error) {
+        console.error('Failed to add user:', error);
+        throw new Error('Failed to add user');
+    }
+}
 
-module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword,getMealsByDateRange,addMealToDB };
+module.exports = { findUserByUsernameAndPassword, findMealsByUsernameAndPassword, getMealsByDateRange, addMealToDB, addUserToDB };
+

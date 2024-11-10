@@ -16,14 +16,11 @@ async function isJewishHoliday (date) {
         // If items exist, check for yomtov
         if (response.data && response.data.items) {
             // Log each item to verify structure
-            response.data.items.forEach(item => console.log("Item:", item));
+            //response.data.items.forEach(item => console.log("Item:", item));
             // Check for yomtov being true
             const isYomtov = response.data.items.some(item => item.yomtov === true && item.date===specificDate);
             const isHoliday = response.data.items.some(item => item.Holiday === true && item.date===specificDate);
             const isSaturday = mealDate.getDay()===6;
-            console.log(isYomtov)
-            console.log(isSaturday)
-            // Alternative check: use category as 'holiday' if yomtov is missing
             return isYomtov || isHoliday||isSaturday;
         } else {
             console.error('Unexpected data format:', response.data);
@@ -34,5 +31,4 @@ async function isJewishHoliday (date) {
         return false;
     }
 }
-//isJewishHoliday (30/10/2024)
 module.exports = { isJewishHoliday };
