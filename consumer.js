@@ -1,7 +1,14 @@
 const { Kafka } = require('kafkajs');
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+const PORT = 3001; // Choose a port for the consumer server
+
+app.use(cors()); // Allow requests from your frontend
 
 const kafka = new Kafka({
-    clientId: 'eatTrackerAlertReceiver',
+    clientId: 'eatTrackerConsumer',
     brokers: ['csju0q6hhb4uo561sp20.any.eu-central-1.mpx.prd.cloud.redpanda.com:9092'],
     ssl: true,
     sasl: {
@@ -11,30 +18,34 @@ const kafka = new Kafka({
     },
 });
 
-const consumer = kafka.consumer({ groupId: 'glucose_alerts_group' });
+const consumer = kafka.consumer({ groupId: 'glucose_alert_group' });
 
-const receiveMessages = async () => {
+(async () => {
     await consumer.connect();
     await consumer.subscribe({ topic: 'glucose_alerts', fromBeginning: true });
 
-    await consumer.run({
-        eachMessage: async ({ topic, partition, message }) => {
-            const alertData = JSON.parse(message.value.toString());
-            console.log('Received alert:', alertData);
-            // Trigger the popup with the alert data here
-            showPopup(alertData);
-        },
-    });
-};
+    // SSE Endpoint
+    app.get('/alerts', async (req, res) => {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
 
-const showPopup = (alertData) => {
-    // Implementation for displaying popup with alert data
-    const popup = window.open('', 'Alert', 'width=300,height=200');
-    popup.document.write(`
-        <h1>Glucose Alert</h1>
-        <p>Patient: ${alertData.patientName}</p>
-        <p>Glucose Level: ${alertData.glucoseLevel}</p>
-        <p>Timestamp: ${new Date(alertData.timestamp).toLocaleString()}</p>
-    `);
-};
-module.exports=receiveMessages();
+        // Listen to messages and send them to the client
+        consumer.run({
+            eachMessage: async ({ topic, partition, message }) => {
+                const alert = JSON.parse(message.value.toString());
+                res.write(`data: ${JSON.stringify(alert)}\n\n`);
+            },
+        });
+
+        // Handle disconnections
+        req.on('close', () => {
+            console.log('Client disconnected from alerts');
+            res.end();
+        });
+    });
+
+    app.listen(PORT, () => {
+        console.log(`Consumer server running on http://localhost:${PORT}`);
+    });
+})();

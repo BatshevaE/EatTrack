@@ -4,7 +4,6 @@ const  hebcalModel= require('../models/hebcalModel');
 const  usdaModel= require('../models/usdaModel');
 const  userModel= require('../models/userModel');
 const  predictController= require('../controllers/predictController.js');
-const sendAlert = require('C:/cloud/alert/sendAlert');
 
 
 exports.addMeal = async (req, res) => {
@@ -39,9 +38,6 @@ exports.addMeal = async (req, res) => {
             GlucoseLevelInFood,
             PredictedGlucoseLevel
         };
-        if (mealData.GlucoseLevelAfterTwoHours > 110) {
-            await sendAlert(username,mealData);
-          }
         await userModel.addMealToDB(username, mealData);
        
         res.redirect(`/index?username=${username}`);
