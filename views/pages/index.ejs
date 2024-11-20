@@ -1,35 +1,7 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <%- include("../partials/header") %>
 
-    <meta name="description" content="">
-    <meta name="author" content="Tooplate">
-
-    <title>Eat Track - HTML CSS Template</title>
-
-    <!-- CSS FILES -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100;300;400;600;700&display=swap" rel="stylesheet">
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-icons.css" rel="stylesheet">
-    <link href="css/owl.carousel.min.css" rel="stylesheet">
-    <link href="css/tooplate-moso-interior.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/table.css">
-    <link rel="stylesheet" href="css/homeSection.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
-
-
-    <style>
-        #section_3 {
-            margin-top: 50px; /* Adjust this as needed */
-            clear: both;      /* Ensures it does not overlap with Section 2 */
-        }
-    </style>
-
-</head>
 <body>
     <nav class="navbar navbar-expand-lg bg-light fixed-top shadow-lg">
         <div class="container">
@@ -120,7 +92,6 @@
                                                 <th scope="col">Description</th>
                                                 <th scope="col">Gram</th>
                                                 <th scope="col">Glucose Level (After 2 Hours)</th>
-                                                <th scope="col">Predicted Glucose Level</th> <!-- New Column Header -->
                                                 <th scope="col">Calories</th>
                                                 <th scope="col">Holiday</th>
                                             </tr>
@@ -134,7 +105,6 @@
                                                     <td><%= meal.Description %></td>
                                                     <td><%= meal.Gram %></td>
                                                     <td><%= meal.GlucoseLevelAfterTwoHours %></td>
-                                                    <td><%= meal.PredictedGlucoseLevel || 'N/A' %></td> <!-- Display Predicted Glucose Level -->
                                                     <td><%= meal.GlucoseLevelInFood || 'N/A' %></td> <!-- Display Glucose Level in Food -->
                                                     <td>
                                                         <% if (meal.Holiday) { %>
@@ -563,11 +533,9 @@
                 <div class="row">
 
                     <div class="col-lg-3 col-md-5 col-12 mb-3">
-                        <h3><a href="index.html" class="custom-link mb-1">Eat Track</a></h3>
-
+                        <h3><a href="index.ejs" class="custom-link mb-1">Eat Track</a></h3>
                         <p class="text-white">Your health, our priority. Join us in building a healthier future together.</p>
                         
-                       
                     </div>
 
                     <div class="col-lg-3 col-md-3 col-12 ms-lg-auto mb-3">
@@ -637,6 +605,6 @@
         <script src="js/jquery.backstretch.min.js"></script>
         <script src="js/owl.carousel.min.js"></script>
         <script src="js/custom.js"></script>
-
+       
     </body>
 </html>
