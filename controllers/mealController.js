@@ -19,7 +19,6 @@ exports.addMeal = async (req, res) => {
             
             // Step 2: Send Cloudinary URL to Imagga to get the highest confidence tag
             DescriptionImage = await imaggaModel.getHighestConfidenceTag(cloudinaryUrl) || "No description available";
-           //DescriptionImage="pasta"
         }
         let GlucoseLevelInFood=await usdaModel.getGlucoseLevel(DescriptionImage,Gram)
         GlucoseLevelInFood = GlucoseLevelInFood || 0; // Default to 0 if null or undefined
@@ -34,7 +33,8 @@ exports.addMeal = async (req, res) => {
             Holiday,
             GlucoseLevelInFood,
         };
-        await userModel.addMealToDB(username, mealData);
+        if(DescriptionImage!="Unknown food type")
+           await userModel.addMealToDB(username, mealData);
        
         res.redirect(`/index?username=${username}`);
     } catch (error) {
@@ -54,15 +54,14 @@ exports.predictGlucoseLevel = async (req, res) => {
             const cloudinaryUrl = await cloudinaryModel.uploadImageToCloudinary(imageFilePath);
             
             // Step 2: Send Cloudinary URL to Imagga to get the highest confidence tag
-            //DescriptionImage = await imaggaModel.getHighestConfidenceTag(cloudinaryUrl) || "No description available";
-           DescriptionImage="pasta"
+            DescriptionImage = await imaggaModel.getHighestConfidenceTag(cloudinaryUrl) || "No description available";
         }
         let GlucoseLevelInFood=await usdaModel.getGlucoseLevel(DescriptionImage,Gram)
         GlucoseLevelInFood = GlucoseLevelInFood || 0; // Default to 0 if null or undefined
     
         // Calculate predicted glucose level (implement prediction logic)
         const predictedLevel =await predictController.predictGlucoseLevel(username,{MealType,Time, Date,DescriptionImage, Gram,GlucoseLevelAfterTwoHours,Holiday,GlucoseLevelInFood});
-        if(DescriptionImage!=null)// & Gram!=null & Time!=null & Holiday!=null)
+        if(DescriptionImage!=null && DescriptionImage!="Unknown food type")// & Gram!=null & Time!=null & Holiday!=null)
            res.json({ predictedLevel  });
     } catch (error) {
         console.error("Error predicting glucose level:", error);

@@ -15,7 +15,9 @@ async function getHighestConfidenceTag(imageUrl) {
             }
         });
         const tags = response.data.result.tags;
-        if (tags.length > 0) {
+        
+                
+        if (tags.length > 0 && isFoodImage(tags)) {
             const highestConfidenceTag = tags.reduce((highest, tag) => 
                 tag.confidence > highest.confidence ? tag : highest, tags[0]
             );
@@ -28,5 +30,17 @@ async function getHighestConfidenceTag(imageUrl) {
     }
 }
 
+/**
+ * Checks if the image contains food-related tags.
+ * @param {Array} tags - The list of tags from the Imagga API.
+ * @returns {boolean} - True if the image contains food-related tags, otherwise false.
+ */
+const isFoodImage = (tags) => {
+    // Define a list of common food-related keywords
+    const foodKeywords = ['food', 'meal', 'dish', 'snack', 'breakfast', 'lunch', 'dinner', 'pasta', 'pizza', 'fruit', 'vegetable', 'drink'];
+  
+    // Check if any of the tags contain food-related keywords
+    return tags.some(tag => foodKeywords.includes(tag.tag.en.toLowerCase()));
+  };
 
 module.exports = { getHighestConfidenceTag };
